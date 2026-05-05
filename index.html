@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=960">
+<title>Grove — UX Capstone Final Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display&display=swap');
+
+  :root {
+    --bg-deep: #141f14;
+    --bg-card: #1c2e1c;
+    --bg-card-alt: #233023;
+    --accent: #E4B343;
+    --accent-dim: #b8902f;
+    --accent-glow: rgba(228,179,67,0.12);
+    --text-primary: #f0ead6;
+    --text-secondary: #a8b5a0;
+    --text-muted: #6b7a63;
+    --text-dark: #1a2e1a;
+    --border: rgba(228,179,67,0.15);
+    --green-bright: #4a7a3a;
+    --red-soft: #c45c4a;
+    --blue-soft: #4a8cc4;
+    --spacing: 8px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --line-height-tight: 1.15;
+    --line-height-normal: 1.45;
+    --line-height-relaxed: 1.6;
+    --letter-spacing-display: -0.02em;
+    --letter-spacing-body: 0;
+    --letter-spacing-label: 0.08em;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0f0a;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .deck { width: 960px; height: 540px; position: relative; overflow: hidden; }
+
+  .slide {
+    position: absolute; top: 0; left: 0;
+    width: 960px; height: 540px;
+    background: var(--bg-deep);
+    display: none; overflow: hidden;
+  }
+  .slide.active { display: grid; }
+
+  /* Shared section bar */
+  .section-bar {
+    grid-column: 1 / -1;
+    display: flex; align-items: baseline; gap: calc(var(--spacing) * 2);
+    margin-bottom: calc(var(--spacing) * 2);
+    padding-bottom: calc(var(--spacing) * 1.5);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 11px; color: var(--text-muted);
+    letter-spacing: var(--letter-spacing-label);
+    text-transform: uppercase; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 28px; color: var(--text-primary);
+    letter-spacing: var(--letter-spacing-display);
+    line-height: var(--line-height-tight);
+  }
+
+  /* ========== SLIDE 1: Title + Agenda ========== */
+  .s1 {
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
+    align-content: center; justify-items: center;
+    padding: calc(var(--spacing) * 6);
+    background: linear-gradient(160deg, #1a2e1a 0%, #0f1a0f 60%, #141f14 100%);
+  }
+  .s1 .title-block { text-align: center; }
+  .s1 .logo {
+    font-family: var(--font-display); font-size: 72px; color: var(--accent);
+    letter-spacing: var(--letter-spacing-display); line-height: var(--line-height-tight);
+    margin-bottom: calc(var(--spacing) * 1);
+  }
+  .s1 .tagline { font-size: 22px; color: var(--text-secondary); font-weight: 300; margin-bottom: calc(var(--spacing) * 2); }
+  .s1 .divider { width: 320px; height: 1px; background: var(--accent); opacity: 0.4; margin: 0 auto calc(var(--spacing) * 2); }
+  .s1 .course-label { font-size: 14px; color: var(--text-muted); margin-bottom: calc(var(--spacing) * 5); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; }
+  .s1 .agenda-label { font-size: 14px; color: var(--accent); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; font-weight: 600; margin-bottom: calc(var(--spacing) * 2); text-align: left; width: 340px; }
+  .s1 .agenda { list-style: none; text-align: left; width: 340px; }
+  .s1 .agenda li { font-size: 16px; color: var(--text-primary); line-height: var(--line-height-relaxed); padding: 4px 0; }
+  .s1 .agenda .num { color: var(--accent-dim); font-weight: 600; display: inline-block; width: 32px; font-size: 14px; }
+
+  /* ========== SLIDE 2: Problem Space (full PDF page 2) ========== */
+  .s2 {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    padding: calc(var(--spacing) * 3.5) calc(var(--spacing) * 5);
+    gap: 0;
+    background: linear-gradient(170deg, #1a2e1a 0%, #111a11 100%);
+  }
+  .s2 .points-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(var(--spacing) * 2);
+    align-content: start;
+  }
+  .s2 .point {
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2.5);
+    border-left: 3px solid var(--red-soft);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 calc(var(--spacing) * 2);
+  }
+  .s2 .point-num {
+    font-family: var(--font-display);
+    font-size: 28px; color: var(--accent);
+    grid-row: 1 / 3;
+    align-self: center;
+    opacity: 0.6;
+  }
+  .s2 .point h3 {
+    font-size: 15px; font-weight: 600;
+    color: var(--accent); margin-bottom: 4px;
+    line-height: var(--line-height-tight);
+  }
+  .s2 .point p {
+    font-size: 12.5px; color: var(--text-secondary);
+    line-height: var(--line-height-normal);
+  }
+
+  /* ========== SLIDE 3: Our Response (full PDF page 3) ========== */
+  .s3 {
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-columns: 1fr;
+    padding: calc(var(--spacing) * 3.5) calc(var(--spacing) * 5);
+    gap: 0;
+    background: linear-gradient(170deg, #1a2e1a 0%, #111a11 100%);
+  }
+  .s3 .intro-block {
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2.5);
+    margin-bottom: calc(var(--spacing) * 2);
+    border-left: 3px solid var(--accent);
+  }
+  .s3 .intro-block p { font-size: 12px; color: var(--text-secondary); line-height: var(--line-height-normal); }
+  .s3 .concepts-label {
+    font-size: 12px; color: var(--accent);
+    letter-spacing: var(--letter-spacing-label);
+    font-weight: 500; margin-bottom: calc(var(--spacing) * 1.5);
+  }
+  .s3 .concepts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: calc(var(--spacing) * 2);
+  }
+  .s3 .concept {
+    background: var(--bg-card);
+    border-radius: 6px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+    border-top: 3px solid var(--green-bright);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .s3 .concept h3 { font-size: 14px; font-weight: 600; color: var(--accent); line-height: var(--line-height-tight); }
+  .s3 .concept p { font-size: 11.5px; color: var(--text-secondary); line-height: var(--line-height-normal); }
+  .s3 .bottom-quote {
+    text-align: center; font-size: 12px; color: var(--text-muted);
+    font-style: italic; padding-top: calc(var(--spacing) * 1.5);
+    border-top: 1px solid var(--border);
+    margin-top: calc(var(--spacing) * 2);
+  }
+
+  /* ========== SLIDE 4: Research + Assumptions ========== */
+  .s4 {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1.1fr 0.9fr;
+    padding: calc(var(--spacing) * 3.5) calc(var(--spacing) * 5);
+    gap: 0 calc(var(--spacing) * 3);
+    background: linear-gradient(170deg, #1a2e1a 0%, #111a11 100%);
+  }
+  .s4 .research-col, .s4 .assumption-col { display: flex; flex-direction: column; gap: calc(var(--spacing) * 1.5); }
+  .col-header { font-size: 12px; letter-spacing: var(--letter-spacing-label); text-transform: uppercase; font-weight: 600; margin-bottom: calc(var(--spacing) * 0.5); }
+  .col-header.research { color: var(--blue-soft); }
+  .col-header.assumption { color: var(--accent); }
+  .insight {
+    background: var(--bg-card); border-radius: 6px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+    border-left: 3px solid var(--blue-soft);
+  }
+  .insight h3 { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; line-height: var(--line-height-tight); }
+  .insight .stat { font-size: 11px; color: var(--accent); font-weight: 600; }
+  .insight p { font-size: 10.5px; color: var(--text-secondary); line-height: var(--line-height-normal); }
+  .assumption-card {
+    background: var(--bg-card); border-radius: 6px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+    border-left: 3px solid var(--accent);
+  }
+  .assumption-card h3 { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+  .assumption-card p { font-size: 10.5px; color: var(--text-secondary); line-height: var(--line-height-normal); }
+
+  /* ========== SLIDE 5: Demo v1 ========== */
+  .s5 {
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 1fr;
+    background: #0a0f0a;
+  }
+  .demo-header {
+    display: flex; align-items: baseline; gap: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 5);
+    background: var(--bg-deep); border-bottom: 1px solid var(--border);
+  }
+  .screenshot-wrap {
+    display: flex; align-items: center; justify-content: center;
+    padding: calc(var(--spacing) * 1); overflow: hidden;
+  }
+  .screenshot-wrap img {
+    width: 920px; height: auto; border-radius: 6px;
+    border: 1px solid rgba(228,179,67,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  }
+  .demo-footer {
+    text-align: center; padding: calc(var(--spacing) * 1.5);
+    background: var(--bg-deep); border-top: 1px solid var(--border);
+  }
+  .demo-cta { font-size: 14px; color: var(--accent); font-weight: 500; }
+
+  /* ========== SLIDES 6-8: User Test (PPTX-faithful, light callouts) ========== */
+  .ut-slide {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    background: var(--bg-deep);
+  }
+  .ut-title-bar {
+    background: #f5f0e0;
+    padding: 12px 28px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .ut-title-bar p {
+    font-size: 15px; font-weight: 500; color: #1a1a1a;
+    line-height: var(--line-height-normal);
+  }
+  .ut-title-bar strong { color: #1a1a1a; font-weight: 700; }
+  .ut-body { position: relative; overflow: hidden; }
+
+  /* Light callout bubble (PPTX style) */
+  .ut-callout {
+    position: absolute;
+    background: rgba(255,250,235,0.95);
+    border: 1.5px solid #d4c89a;
+    border-radius: 6px;
+    padding: 12px 16px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  }
+  .ut-callout h4 {
+    font-size: 12px; color: #5a4a1a; font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .ut-callout p {
+    font-size: 12px; color: #333; line-height: 1.45;
+  }
+
+  /* --- SLIDE 6: Two screenshots side-by-side --- */
+  .s6 .ut-body {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; background: var(--bg-deep);
+  }
+  .s6 .panel { position: relative; overflow: hidden; }
+  .s6 .panel img {
+    width: 100%; height: 100%; object-fit: cover;
+    border: 1px solid rgba(228,179,67,0.15);
+  }
+  /* Right panel: screenshot + overlay annotations */
+  .s6 .panel-right { position: relative; overflow: hidden; }
+  .s6 .panel-right img { width: 100%; height: 100%; object-fit: cover; }
+  .s6 .kw-overlay {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+    pointer-events: none;
+    justify-content: flex-start;
+  }
+  .s6 .kw-header {
+    background: rgba(30,50,30,0.88);
+    padding: 6px 14px;
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+  }
+  .s6 .kw-header h3 {
+    font-size: 15px; font-weight: 700; color: var(--accent);
+    font-style: italic;
+  }
+  .s6 .kw-subtitle {
+    background: rgba(30,50,30,0.8);
+    padding: 5px 14px; text-align: center;
+  }
+  .s6 .kw-subtitle p { font-size: 12px; color: var(--text-primary); }
+  .s6 .kw-concepts {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px; padding: 6px 8px;
+  }
+  .s6 .kw-col { display: flex; flex-direction: column; gap: 4px; }
+  .s6 .kw-col-header {
+    background: rgba(228,179,67,0.2);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 5px 8px;
+    text-align: center;
+    font-size: 13px; font-weight: 700; color: var(--accent);
+  }
+  .s6 .kw-concept-block {
+    background: rgba(245,240,225,0.92);
+    border-radius: 4px; padding: 6px 8px;
+    border-left: 3px solid #8b6ec4;
+  }
+  .s6 .kw-concept-block .tag {
+    display: inline-block; background: #8b6ec4; color: #fff;
+    font-size: 7px; font-weight: 700; padding: 1px 5px;
+    border-radius: 2px; letter-spacing: 0.05em; margin-bottom: 2px;
+  }
+  .s6 .kw-concept-block .desc { font-size: 9px; color: #333; line-height: 1.3; }
+  .s6 .kw-difficulty-row {
+    display: flex; align-items: center; gap: 6px;
+    padding: 0 8px; margin-top: -2px;
+  }
+  .s6 .kw-difficulty-row .easy-label, .s6 .kw-difficulty-row .hard-label {
+    font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .s6 .kw-difficulty-row .easy-label { background: #5a9a4a; color: #fff; }
+  .s6 .kw-difficulty-row .hard-label { background: #c45c4a; color: #fff; }
+  .s6 .kw-difficulty-row .arrow-line { flex: 1; height: 3px; background: linear-gradient(90deg, #5a9a4a, #c45c4a); border-radius: 2px; }
+  .s6 .kw-bottom {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    background: rgba(30,50,30,0.85);
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+  .s6 .kw-auto-review {
+    background: rgba(245,240,225,0.92);
+    border: 1px solid #d4c89a; border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px; font-weight: 600; color: #333;
+  }
+  /* Callouts on left panel — bigger */
+  .s6 .c1 { top: 10px; right: 8px; max-width: 210px; z-index: 2; }
+  .s6 .c1 h4 { font-size: 13px; }
+  .s6 .c1 p { font-size: 13px; }
+  .s6 .c2 { bottom: 20px; left: 10px; max-width: 220px; z-index: 2; }
+  .s6 .c2 h4 { font-size: 13px; }
+  .s6 .c2 p { font-size: 13px; }
+
+  /* --- SLIDE 7: Full-width + Monthly Summary panel --- */
+  .s7 .ut-body img.ut-bg { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .s7 .summary-panel {
+    position: absolute; top: 30px; left: 40px;
+    width: 360px; background: rgba(245,240,225,0.95);
+    border: 1.5px solid #d4c89a; border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    z-index: 2;
+  }
+  .s7 .summary-panel-header {
+    background: rgba(30,50,30,0.9); padding: 10px 18px;
+    border-bottom: 2px solid var(--accent);
+    font-size: 15px; font-weight: 700; color: var(--accent);
+  }
+  .s7 .summary-panel-body { padding: 14px 18px; }
+  .s7 .summary-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .s7 .summary-item:last-child { border-bottom: none; }
+  .s7 .summary-item p { font-size: 12px; color: #333; line-height: 1.45; }
+  .s7 .motivation-callout {
+    position: absolute; bottom: 40px; right: 30px;
+    max-width: 280px;
+    background: rgba(245,240,225,0.95);
+    border: 1.5px solid #d4c89a; border-radius: 8px;
+    padding: 14px 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 2;
+  }
+  .s7 .motivation-callout p { font-size: 12px; color: #333; line-height: 1.45; }
+  .s7 .motivation-callout strong { color: #5a4a1a; }
+
+  /* --- SLIDE 8: Full-width + confusion callout --- */
+  .s8 .ut-body img.ut-bg { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .s8 .confusion-callout {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    width: 520px;
+    background: rgba(245,240,225,0.95);
+    border: 1.5px solid #d4c89a; border-radius: 8px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    z-index: 2;
+  }
+  .s8 .confusion-callout h4 { font-size: 13px; color: #5a4a1a; font-weight: 700; margin-bottom: 8px; }
+  .s8 .confusion-callout p { font-size: 13px; color: #333; line-height: 1.5; }
+
+  /* ========== SLIDE 9: v2 Improvements ========== */
+  .s9 {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    background: #0a0f0a;
+  }
+  .s9 .screenshot-overlay {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .s9 .screenshot-overlay img { width: 960px; height: auto; opacity: 0.3; filter: blur(1.5px); }
+  .s9 .overlay-content {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: calc(var(--spacing) * 2.5);
+    background: rgba(10,15,10,0.55);
+    padding: calc(var(--spacing) * 5);
+  }
+  .improve-item {
+    display: flex; align-items: flex-start; gap: calc(var(--spacing) * 2);
+    background: rgba(28,46,28,0.88);
+    border-radius: 8px;
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+    width: 560px; border-left: 3px solid var(--green-bright);
+    backdrop-filter: blur(8px);
+  }
+  .improve-check { color: var(--green-bright); font-size: 18px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .improve-text h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+  .improve-text p { font-size: 12px; color: var(--text-secondary); line-height: var(--line-height-normal); }
+  .demo-cta-bottom { font-size: 14px; color: var(--accent); font-weight: 500; }
+
+  /* ========== SLIDE 10: Future Analysis (full Part 7) ========== */
+  .s10 {
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5) calc(var(--spacing) * 4);
+    gap: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2.5);
+    background: linear-gradient(170deg, #1a2e1a 0%, #111a11 100%);
+  }
+  .question-card {
+    background: var(--bg-card); border-radius: 8px;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+    display: flex; flex-direction: column; gap: 5px;
+    border-left: 3px solid var(--accent-dim);
+  }
+  .q-number { font-size: 9px; color: var(--accent); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; font-weight: 600; }
+  .q-title { font-size: 13px; font-weight: 600; color: var(--text-primary); line-height: var(--line-height-tight); }
+  .q-question { font-size: 10.5px; color: var(--text-secondary); line-height: 1.35; font-style: italic; }
+  .q-method { font-size: 10px; color: var(--text-muted); line-height: 1.35; background: var(--bg-card-alt); border-radius: 4px; padding: 5px 8px; }
+  .q-method strong { color: var(--text-secondary); }
+  .q-measures { font-size: 9.5px; color: var(--text-muted); line-height: 1.3; margin-top: 1px; }
+  .q-measures strong { color: var(--text-secondary); }
+
+  /* Navigation */
+  .nav-bar {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 5px; z-index: 100;
+    background: rgba(10,15,10,0.85);
+    padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--border); backdrop-filter: blur(8px);
+  }
+  .nav-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--text-muted); cursor: pointer;
+    transition: all 0.2s; border: none; padding: 0;
+  }
+  .nav-dot.active { background: var(--accent); transform: scale(1.2); }
+  .nav-dot:hover { background: var(--accent-dim); }
+  .slide-counter { position: fixed; bottom: 16px; right: 24px; font-size: 12px; color: var(--text-muted); z-index: 100; }
+  .fullscreen-hint { position: fixed; bottom: 16px; left: 24px; font-size: 11px; color: var(--text-muted); z-index: 100; opacity: 0.5; }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- ===== SLIDE 1: Title + Agenda ===== -->
+  <div class="slide s1 active" data-slide="1">
+    <div class="title-block">
+      <div class="logo">Grove</div>
+      <div class="tagline">Watch Your Knowledge Grow</div>
+      <div class="divider"></div>
+      <div class="course-label">UX Fundamentals &mdash; Final Project Presentation</div>
+      <div class="agenda-label">Agenda</div>
+      <ul class="agenda">
+        <li><span class="num">01</span> Current LLM Pain Points</li>
+        <li><span class="num">02</span> Our Response: Grove</li>
+        <li><span class="num">03</span> Research Insights &amp; Assumptions</li>
+        <li><span class="num">04</span> Demo: Grove v1</li>
+        <li><span class="num">05</span> User Test Results</li>
+        <li><span class="num">06</span> Grove v2: Improvements</li>
+        <li><span class="num">07</span> Future Analysis</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: Problem Space (full PDF page 2 content) ===== -->
+  <div class="slide s2" data-slide="2">
+    <div class="section-bar">
+      <span class="section-label">01 &mdash; Problem Space</span>
+      <span class="section-title">Why AI makes learning harder, not easier</span>
+    </div>
+    <div class="points-grid">
+      <div class="point">
+        <span class="point-num">1</span>
+        <h3>The &ldquo;why bother&rdquo; problem &mdash; erosion of learning motivation</h3>
+        <p>AI now handles almost any task on demand. This quietly undermines the intrinsic drive to learn: if the answer is always one prompt away, sitting with confusion starts to feel irrational. Learning has always had an inward pull &mdash; the desire to genuinely understand the world &mdash; but AI commoditizes outputs and short-circuits that pull. The risk isn&rsquo;t that AI replaces thinking; it&rsquo;s that users never feel the need to start.</p>
+      </div>
+      <div class="point">
+        <span class="point-num">2</span>
+        <h3>Diminishing patience &mdash; the attention gap</h3>
+        <p>AI has recalibrated our tolerance for effort. When every question gets an instant, polished answer, spending time learning something &ldquo;the long way&rdquo; starts to feel like a waste. This creates a UX problem: the momentum needed to actually absorb knowledge &mdash; reading, pausing, reflecting &mdash; collapses before it begins. The user experience of learning must compete with the frictionlessness of just asking.</p>
+      </div>
+      <div class="point">
+        <span class="point-num">3</span>
+        <h3>The skimming trap &mdash; outputs consumed, not understood</h3>
+        <p>Even when users do engage with AI-generated content, depth rarely follows. Most people don&rsquo;t read everything a model returns &mdash; they skim, extract, and move on. LLMs produce polished surfaces, not comprehension. The result: shallow learning that feels complete, knowledge that doesn&rsquo;t stick, and a growing gap between exposure and understanding.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: Our Response: Grove (full PDF page 3 content) ===== -->
+  <div class="slide s3" data-slide="3">
+    <div class="section-bar">
+      <span class="section-label">02 &mdash; Design Concepts</span>
+      <span class="section-title">Our Response: Grove</span>
+    </div>
+    <div class="intro-block">
+      <p>Inspired by Hyperknow &mdash; a learning agent built by Columbia undergrads that proved demand for deeper AI-powered learning &mdash; we asked a different question. Hyperknow solves what the AI can do: deep explanations, personalized memory, study materials. We focused on how the user experiences it.</p>
+    </div>
+    <div class="concepts-label">Three UX concepts, each responding directly to a pain point:</div>
+    <div class="concepts-grid">
+      <div class="concept">
+        <h3>1. Friction on purpose &mdash; thinking before and after</h3>
+        <p style="font-size:9px;color:var(--red-soft);font-weight:600;margin-bottom:4px;">Solves: &ldquo;Why bother&rdquo; &mdash; erosion of motivation</p>
+        <p>Grove wraps AI answers with moments that require active engagement. Before revealing an explanation, it asks what you already think. It asks follow-up questions you need to respond to before moving forward. The AI doesn&rsquo;t just answer &mdash; it makes you a participant in the exchange.</p>
+      </div>
+      <div class="concept">
+        <h3>2. A knowledge tree that grows with you</h3>
+        <p style="font-size:9px;color:var(--red-soft);font-weight:600;margin-bottom:4px;">Solves: Diminishing patience &mdash; the attention gap</p>
+        <p>Instead of a chat log that disappears, every concept you engage with becomes a block you place on a living knowledge tree. The tree grows visually as you learn &mdash; color-coded by depth, connected by relationships. Progress is something you can see and build, not just feel.</p>
+      </div>
+      <div class="concept">
+        <h3>3. Map the edges of what you know &mdash; then cross them</h3>
+        <p style="font-size:9px;color:var(--red-soft);font-weight:600;margin-bottom:4px;">Solves: The skimming trap &mdash; consumed, not understood</p>
+        <p>Your knowledge has a shape &mdash; and most of the time you can&rsquo;t see it. Grove maps it. As you explore topics, a knowledge map lights up territory you&rsquo;ve covered and leaves the rest dark. When your questions push into a new area, that region illuminates &mdash; making visible both what you&rsquo;ve mastered and what lies just beyond. The interface doesn&rsquo;t just tell you what you don&rsquo;t know; it shows you the boundary, and invites you to cross it.</p>
+      </div>
+    </div>
+    <div class="bottom-quote">The goal isn&rsquo;t a smarter model. It&rsquo;s an interface that makes intelligence actually land.</div>
+  </div>
+
+  <!-- ===== SLIDE 4: Research Insights + Assumptions ===== -->
+  <div class="slide s4" data-slide="4">
+    <div class="section-bar">
+      <span class="section-label">03 &mdash; Research &amp; Assumptions</span>
+      <span class="section-title">What research tells us &mdash; and what we&rsquo;re betting on</span>
+    </div>
+    <div class="research-col">
+      <div class="col-header research">Synthesized UX Research</div>
+      <div class="insight">
+        <h3>Agency-First Framework <span class="stat">(Troussas et al., n=40)</span></h3>
+        <p>+58% Sense of Agency, +44% Intent Alignment, +75% Perceived Ownership when users have productive friction in AI interactions.</p>
+      </div>
+      <div class="insight">
+        <h3>Invisible Skill Decay <span class="stat">(Macnamara et al., 2024)</span></h3>
+        <p>AI mimics cognitive processes, targeting the hardest-to-rebuild skills. Decay happens without the user&rsquo;s awareness &mdash; no failure signal.</p>
+      </div>
+      <div class="insight">
+        <h3>Slot Machine Pattern <span class="stat">(Green, 2026)</span></h3>
+        <p>AI&rsquo;s variable output quality creates variable-ratio reinforcement &mdash; the same mechanism that makes slot machines addictive.</p>
+      </div>
+      <div class="insight">
+        <h3>The Literacy Gap <span class="stat">(Thomson et al., n=453)</span></h3>
+        <p>78.6% of students unaware of AI policies, yet 67% rate AI ethics as career-important. Users want agency but lack tools.</p>
+      </div>
+    </div>
+    <div class="assumption-col">
+      <div class="col-header assumption">Assumptions</div>
+      <div class="assumption-card">
+        <h3>1. Interactive learning wins</h3>
+        <p>Users prefer engaging, structured learning over passive consumption &mdash; they&rsquo;d trade &ldquo;infinite scroll&rdquo; for intent-aligned content.</p>
+      </div>
+      <div class="assumption-card">
+        <h3>2. Visible growth = satisfaction</h3>
+        <p>Growing a knowledge tree + monthly progress summaries creates genuine achievement and drives continued use.</p>
+      </div>
+      <div class="assumption-card">
+        <h3>3. Friction is a feature</h3>
+        <p>Users will accept +18% task time for meaningful engagement. Productive friction transforms passive consumers into active builders.</p>
+      </div>
+      <div class="assumption-card">
+        <h3>4. Structure matches mental models</h3>
+        <p>Visual knowledge trees align with how people naturally want to organize understanding &mdash; not linear notes, but connected maps.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 5: Demo v1 ===== -->
+  <div class="slide s5" data-slide="5">
+    <div class="demo-header">
+      <span class="section-label">04 &mdash; Demo</span>
+      <span class="section-title">Grove v1 &mdash; Live Demo</span>
+    </div>
+    <div class="screenshot-wrap">
+      <img src="grove-screenshot.png" alt="Grove POC">
+    </div>
+    <div class="demo-footer">
+      <span class="demo-cta">Exiting slides for live demo &rarr;</span>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: User Test 1 — Review & Revisit (two screenshots) ===== -->
+  <div class="slide ut-slide s6" data-slide="6">
+    <div class="ut-title-bar">
+      <p><strong>User Test Feedback 1</strong> <span style="font-size:11px;color:#666;font-weight:400;">(n=5 users)</span><strong>:</strong> users need clearer guidance and tools to effectively review and revisit learned concepts.</p>
+    </div>
+    <div class="ut-body">
+      <!-- Left panel: Grove main view + light callouts -->
+      <div class="panel">
+        <img src="ut1-main.png" alt="Grove Knowledge Explorer">
+        <div class="ut-callout c1">
+          <h4>Review Reminders</h4>
+          <p>Click here to set up review reminding notifications</p>
+        </div>
+        <div class="ut-callout c2">
+          <h4>Knowledge World</h4>
+          <p>Click here to zoom in &amp; zoom out &ldquo;Knowledge World&rdquo; for reviewing and exploration</p>
+        </div>
+      </div>
+      <!-- Right panel: second screenshot + Knowledge World_Economy overlay -->
+      <div class="panel-right">
+        <img src="ut1-right.png" alt="Grove Knowledge World Economy view">
+        <div class="kw-overlay">
+          <div class="kw-header"><h3>Knowledge World_Economy</h3></div>
+          <div class="kw-subtitle"><p>The concepts are organized in order of increasing difficulty</p></div>
+          <div class="kw-concepts">
+            <div class="kw-col">
+              <div class="kw-col-header">GDP</div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Foundation models got good enough</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Hardware costs dropped 80% in 5</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">US-China policy race &mdash; both governments pouring billions into humanoid robotics</div></div>
+            </div>
+            <div class="kw-col">
+              <div class="kw-col-header">LM Curve</div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Foundation models got good enough</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Hardware costs dropped 80% in 5</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">US-China policy race &mdash; both governments pouring billions into humanoid robotics</div></div>
+            </div>
+            <div class="kw-col">
+              <div class="kw-col-header">IS Curve</div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Foundation models got good enough</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">Hardware costs dropped 80% in 5</div></div>
+              <div class="kw-concept-block"><span class="tag">L3 WHY</span><div class="desc">US-China policy race &mdash; both governments pouring billions into humanoid robotics</div></div>
+            </div>
+          </div>
+          <div class="kw-difficulty-row">
+            <span class="easy-label">Easy</span>
+            <div class="arrow-line"></div>
+            <span class="hard-label">Hard</span>
+          </div>
+          <div class="kw-bottom">
+            <span class="kw-auto-review">Auto Review Button</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 7: User Test 2 — Monthly summaries ===== -->
+  <div class="slide ut-slide s7" data-slide="7">
+    <div class="ut-title-bar">
+      <p><strong>User Test Feedback 2</strong> <span style="font-size:11px;color:#666;font-weight:400;">(n=5 users)</span><strong>:</strong> automated monthly summaries help users track progress and stay motivated to continue learning.</p>
+    </div>
+    <div class="ut-body">
+      <img class="ut-bg" src="ut2-main.png" alt="Grove with knowledge tree and chat">
+      <!-- Monthly Summary panel overlay -->
+      <div class="summary-panel">
+        <div class="summary-panel-header">Monthly Summary</div>
+        <div class="summary-panel-body">
+          <div class="summary-item">
+            <p>Number of concepts you have explored in the last month.</p>
+          </div>
+          <div class="summary-item">
+            <p>The frequency with which you have contributed your own valuable insights.</p>
+          </div>
+          <div class="summary-item">
+            <p>The areas of knowledge you have explored most extensively.</p>
+          </div>
+          <div class="summary-item">
+            <p>&hellip;</p>
+          </div>
+        </div>
+      </div>
+      <!-- Motivation callout -->
+      <div class="motivation-callout">
+        <p><strong>Motivate</strong> users to continue using Grove &amp; meet satisfactions of self-achievements</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: User Test 3 — Concept structuring ===== -->
+  <div class="slide ut-slide s8" data-slide="8">
+    <div class="ut-title-bar">
+      <p><strong>User Test Feedback 3</strong> <span style="font-size:11px;color:#666;font-weight:400;">(n=5 users)</span><strong>:</strong> users are unclear how to structure and connect concepts, highlighting the need for more intuitive interaction design.</p>
+    </div>
+    <div class="ut-body">
+      <img class="ut-bg" src="ut3-main.png" alt="Grove concept structuring view">
+      <!-- Central confusion callout -->
+      <div class="confusion-callout">
+        <h4>Interaction Pain Point</h4>
+        <p>Users experience confusion about where to drag these &ldquo;blocks,&rdquo; indicating that the design needs clearer guidance and more intuitive visual cues.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 9: v2 Improvements ===== -->
+  <div class="slide s9" data-slide="9">
+    <div class="demo-header">
+      <span class="section-label">06 &mdash; Iteration</span>
+      <span class="section-title">Grove v2 &mdash; Improved based on feedback</span>
+    </div>
+    <div class="screenshot-overlay">
+      <img src="grove-screenshot.png" alt="Grove POC background">
+      <div class="overlay-content">
+        <div class="improve-item">
+          <span class="improve-check">&#10003;</span>
+          <div class="improve-text">
+            <h3>Review &amp; Revisit System</h3>
+            <p><span style="font-size:10px;color:#E4B343;font-weight:600;">Based on Feedback 1:</span> Users couldn&rsquo;t find review tools &rarr; Added auto-review button, scheduled reminders, Knowledge World zoom, difficulty-sorted concepts.</p>
+          </div>
+        </div>
+        <div class="improve-item">
+          <span class="improve-check">&#10003;</span>
+          <div class="improve-text">
+            <h3>Monthly Progress Summaries</h3>
+            <p><span style="font-size:10px;color:#E4B343;font-weight:600;">Based on Feedback 2:</span> Users lacked motivation signals &rarr; Added monthly dashboard showing concepts explored, insight frequency, knowledge breadth.</p>
+          </div>
+        </div>
+        <div class="improve-item">
+          <span class="improve-check">&#10003;</span>
+          <div class="improve-text">
+            <h3>Intuitive Drag-and-Drop</h3>
+            <p><span style="font-size:10px;color:#E4B343;font-weight:600;">Based on Feedback 3:</span> Users confused about block placement &rarr; Added snap-to zones, visual connection cues, guided structuring hints.</p>
+          </div>
+        </div>
+        <div class="demo-cta-bottom">Live demo of enhanced version &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 10: Future Analysis (full Part 7 content) ===== -->
+  <div class="slide s10" data-slide="10">
+    <div class="section-bar">
+      <span class="section-label">07 &mdash; Future Analysis</span>
+      <span class="section-title">Open questions for long-term viability</span>
+    </div>
+
+    <div class="question-card">
+      <div class="q-number">Question 1</div>
+      <div class="q-title">Scalability of &ldquo;What-How-Why&rdquo; structure</div>
+      <div class="q-question">Can users use the &ldquo;What-How-Why&rdquo; framework to organize all knowledge across different subjects and levels of complexity? (e.g. technical topics vs. conceptual topics)</div>
+      <div class="q-method"><strong>Method:</strong> Usability tests across subjects (math, history, coding). Card-sorting task to see if users naturally map information into what/how/why. Compare with control condition (free-form notes vs. structured framework).</div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-number">Question 2</div>
+      <div class="q-title">Fit with users&rsquo; mental model (Tree Diagram)</div>
+      <div class="q-question">Do users find the tree diagram intuitive for organizing and revising knowledge? How well does it align with users&rsquo; existing study and note-taking habits?</div>
+      <div class="q-method"><strong>Method:</strong> Think-aloud usability testing to observe interaction with tree diagram. Interviews about existing habits (linear notes, mind maps, Notion, etc.).</div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-number">Question 3</div>
+      <div class="q-title">Acceptance of guidance-style responses</div>
+      <div class="q-question">How do users respond to guidance-based (hint-driven) answers compared to direct answers, especially under time pressure? What balance optimizes both learning effectiveness and user satisfaction?</div>
+      <div class="q-method"><strong>Method:</strong> A/B test &mdash; Version A = direct answers, Version B = guidance + hints.</div>
+      <div class="q-measures"><strong>Measure:</strong> User satisfaction, task completion rate, churn rate. Follow-up interviews on when guidance feels helpful.</div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-number">Question 4</div>
+      <div class="q-title">Usability of the product</div>
+      <div class="q-question">Can new users quickly understand how to use Grove without external guidance?</div>
+      <div class="q-method"><strong>Method:</strong> First-time user testing (no instructions). Track time to first successful action, error rates, confusion points.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar" id="navBar"></div>
+<div class="slide-counter" id="counter">1 / 10</div>
+<div class="fullscreen-hint">F = fullscreen &bull; &larr; &rarr; navigate</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  const navBar = document.getElementById('navBar');
+  const counter = document.getElementById('counter');
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i));
+    navBar.appendChild(dot);
+  }
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    navBar.children[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, total - 1));
+    slides[current].classList.add('active');
+    navBar.children[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-bar')) return;
+    if (e.clientX > window.innerWidth / 2) goTo(current + 1);
+    else goTo(current - 1);
+  });
+</script>
+</body>
+</html>
